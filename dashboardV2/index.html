@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Intellivent</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+      type="text/javascript"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+      /* Remove the navbar's default margin-bottom and rounded borders */
+      .navbar {
+        margin-bottom: 0;
+        border-radius: 0;
+      }
+
+      /* Add a gray background color and some padding to the footer */
+      footer {
+        background-color: #f2f2f2;
+        padding: 25px;
+      }
+    </style>
+  </head>
+  <body style="background-color:black">
+    <div class="container-fluid bg-3 text-center" style="background-color:grey">
+      <div class="row" style="margin-top: 10px; margin-bottom: 10px">
+        <div class="col-sm-2">
+          <select class="form-control" id="device_id" style="margin-top: 6px">
+            <option value="0">Device ID: 4242</option>
+            <option value="1">Device ID: 4242</option>
+            <option value="2">Device ID: 12693</option>
+            <option value="3">Device ID: 93</option>
+            <option value="4">Device ID: 586</option>
+          </select>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+          <button
+            type="button"
+            class="btn btn-light btn-lg"
+            style="width:200px; font-weight: bold;"
+            onclick="Swal.fire('Feature in development','Will be released soon!','success')"      
+            
+          >
+            Auto pilots
+          </button>
+        </div>
+        <div class="col-sm-3 col-md-offset-3 ">
+          <button
+            type="button"
+            class="btn btn-light btn-lg pull-right "
+            style="width:200px; font-weight: bold;"
+                  onclick="Swal.fire('Feature in development','Will be released soon!','success')"  
+          >
+            Status
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="container-fluid bg-3 text-center">
+      <div class="row">
+        <div class="col-sm-10">
+          <div id="pressureDiv">
+            <!-- Plotly chart will be drawn inside this DIV -->
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="row">
+            <h4 style="text-align:left; color: #FFFF00">
+              Ppeak (cmH20)
+            </h4>
+            <h1 style="text-align: center; color: #FFFF00; font-size: 60px">
+              37
+            </h1>
+
+            <h4 style="text-align:left; color: #FFFF00">
+              Pmean (CmH20) <b style="font-size:26px">10</b>
+            </h4>
+            <h4 style="text-align:left; color: #FFFF00">
+              PEEP (CmH20) <b style="font-size:26px">5</b>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-10">
+          <div id="flowrateDiv" style="margin-top: -76px">
+            <!-- Plotly chart will be drawn inside this DIV -->
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="row">
+            <h4 style="text-align:left; color: #7FFF00">
+              RR (b/min)
+            </h4>
+            <h1 style="text-align: center; color: #7FFF00; font-size: 60px">
+              4500
+            </h1>
+            <h4 style="text-align:left; color: #7FFF00; ">
+              O2 (%)
+            </h4>
+            <h1 style="text-align: center; color: #7FFF00; font-size: 60px">
+              100
+            </h1>
+            <h4 style="text-align:left; color: #7FFF00">
+              I:E <b style="font-size:26px">1:3.4</b>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-10">
+          <div id="volumeDiv" style="margin-top: -142px">
+            <!-- Plotly chart will be drawn inside this DIV -->
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="row">
+            <h4 style="text-align:left; color: #00FFFF">
+              Mve (I/min)
+            </h4>
+            <h1 style="text-align: center; color: #00FFFF; font-size: 60px">
+              7.7
+            </h1>
+            <h4 style="text-align:left; color: #00FFFF">
+              VTi (ml)
+            </h4>
+            <h1 style="text-align: center; color: #00FFFF">
+              504
+            </h1>
+            <h4 style="text-align:left; color: #00FFFF">
+              VTe (ml) <b style="font-size:26px">516</b>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br /><br />
+    <div class="container-fluid bg-3 text-center" style="background-color:grey">
+      <div class="row" style="margin-top: 10px; margin-bottom: 10px">
+        <div class="col-sm-2">
+          <button
+            type="button"
+            class="btn btn-light btn-lg"
+            style=" font-weight: bold;margin-top: 30px"
+            onclick="settingsPopup()"
+          >
+            Additional <br />
+            Settings
+          </button>
+        </div>
+        <div class="col-sm-2" style="margin-left: 2px;margin-right: 2px">
+          <div class="row">
+            <h5 style="color: black; font-weight: bold">
+              O2 Conc.
+            </h5>
+            <h1 style="text-align: center; color:black; font-size: 50px">
+              100
+            </h1>
+            <h6 style="font-weight: bold">
+              %
+            </h6>
+            <div class="progress">
+              <div
+                class="progress-bar progress-bar-striped bg-warning"
+                role="progressbar"
+                style="width: 100%"
+                aria-valuenow="100"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2" style="margin-left: 2px;margin-right: 2px">
+          <div class="row">
+            <h5 style="color: black; font-weight: bold">
+              PEEP
+            </h5>
+
+            <h1 style="text-align: center; color:black; font-size: 50px">
+              5
+            </h1>
+            <h6 style="font-weight: bold">
+              CmH20
+            </h6>
+            <div class="progress">
+              <div
+                class="progress-bar progress-bar-striped bg-warning"
+                role="progressbar"
+                style="width: 15%"
+                aria-valuenow="15"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2" style="margin-left: 2px;margin-right: 2px">
+          <div class="row">
+            <h5 style="color: black; font-weight: bold">
+              Resp. Rate
+            </h5>
+
+            <h1 style="text-align: center; color:black; font-size: 50px">
+              15
+            </h1>
+            <h6 style="font-weight: bold">
+              b/min
+            </h6>
+            <div class="progress">
+              <div
+                class="progress-bar progress-bar-striped bg-warning"
+                role="progressbar"
+                style="width: 15%"
+                aria-valuenow="15"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2" style="margin-left: 2px;margin-right: 2px">
+          <div class="row">
+            <h5 style="color: black; font-weight: bold">
+              Tidal Volume
+            </h5>
+
+            <h1 style="text-align: center; color:black; font-size: 50px">
+              500
+            </h1>
+            <h6 style="font-weight: bold">
+              ml
+            </h6>
+            <div class="progress">
+              <div
+                class="progress-bar progress-bar-striped bg-warning"
+                role="progressbar"
+                style="width: 15%"
+                aria-valuenow="15"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <button
+            type="button"
+            class="btn btn-light btn-lg"
+            style=" font-weight: bold;margin-top: 30px"
+                  onclick="Swal.fire('Feature in development','Will be released soon!','success')"  
+          >
+            Additional <br />
+            Value
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    var flowratedata = [
+      {
+        x: [],
+        y: [],
+        type: "scatter",
+        line: { color: "rgb(127, 255, 0)" }
+      }
+    ];
+    var pressuredata = [
+      {
+        x: [],
+        y: [],
+        type: "scatter",
+        line: { color: "rgb(255, 255, 0)" }
+      }
+    ];
+    var volumedata = [
+      {
+        x: [],
+        y: [],
+        type: "scatter",
+        line: { color: "rgb(0, 255, 255)" }
+      }
+    ];
+
+    var config = { responsive: true, xaxis: { showgrid: false } };
+    var interval_size = 100;
+
+    Plotly.newPlot(
+      "flowrateDiv",
+      flowratedata,
+      {
+        yaxis: {
+          title: "Flowrate",
+          showgrid: false,
+          color: "rgb(127, 255, 0)"
+        },
+        xaxis: { showgrid: false },
+        plot_bgcolor: "black",
+        paper_bgcolor: "black",
+        height: 300
+      },
+      config
+    );
+    Plotly.newPlot(
+      "pressureDiv",
+      pressuredata,
+      {
+        yaxis: {
+          title: "Pressue",
+          showgrid: false,
+          color: "rgb(255, 255, 0)"
+        },
+        xaxis: { showgrid: false },
+        plot_bgcolor: "black",
+        paper_bgcolor: "black",
+        height: 300
+      },
+      config
+    );
+    Plotly.newPlot(
+      "volumeDiv",
+      volumedata,
+      {
+        yaxis: {
+          title: "Volume",
+          showgrid: false,
+          color: "rgb(0, 255, 255)"
+        },
+        xaxis: { showgrid: false },
+        plot_bgcolor: "black",
+        paper_bgcolor: "black",
+        height: 300
+      },
+      config
+    );
+
+    const interval = setInterval(function() {
+      console.log("new rerq");
+      // method to be executed;
+
+      $.get("https://5e1098fd.eu.ngrok.io", function(data) {
+        console.log(data);
+        l_device_id = parseInt($("#device_id option:selected").val());
+        l_time = data[l_device_id]["time"];
+        var l_parsed_d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        l_parsed_d.setUTCSeconds(l_time);
+        l_expired_co = data[l_device_id]["processed"]["flowrate"];
+        l_pressue = data[l_device_id]["processed"]["pressure"];
+        l_volume = data[l_device_id]["processed"]["MVe"];
+
+        Plotly.extendTraces(
+          "flowrateDiv",
+          {
+            y: [[l_expired_co]],
+            x: [[l_parsed_d]]
+          },
+          [0],
+          interval_size
+        );
+
+        Plotly.extendTraces(
+          "pressureDiv",
+          {
+            y: [[l_pressue]],
+            x: [[l_parsed_d]]
+          },
+          [0],
+          interval_size
+        );
+
+        Plotly.extendTraces(
+          "volumeDiv",
+          {
+            y: [[l_volume]],
+            x: [[l_parsed_d]]
+          },
+          [0],
+          interval_size
+        );
+      });
+    }, 2000);
+
+    function settingsPopup() {
+      Swal.mixin({
+        input: "text",
+        confirmButtonText: "Next &rarr;",
+        showCancelButton: true,
+        progressSteps: ["1", "2", "3","4"]
+      })
+        .queue([
+          {
+            title: "Ventilator Settings",
+            text: "Please enter PEEP value"
+          },
+          {
+            title: "Ventilator Settings",
+            text: "Please enter Tidal Volume value"
+          },{
+            title: "Ventilator Settings",
+            text: "Please enter O2 Level value"
+          },{
+            title: "Ventilator Settings",
+            text: "Please enter IERateFiO2 value"
+          }
+        ])
+        .then(result => {
+          if (result.value) {
+            const answers = "Peep value: " + result.value[0] + " \n" + "Tidal VolumeL: " + result.value[1] + "\n" + "O2 level: " + result.value[2] + "\n" + "IE Rate FiO2: "+ result.value[3] 
+            Swal.fire({
+              title: "Final Confirmation",
+              html: `
+        New settings:
+        <pre><code>${answers}</code></pre>
+      `,
+              confirmButtonText: "Confirm"
+            });
+          }
+        });
+    }
+  </script>
+</html>
+
+
